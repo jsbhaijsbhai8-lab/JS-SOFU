@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>SMART EARN – Earn & Redeem</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://pl29390183.profitablecpmratenetwork.com/3f/53/ff/3f53ff5cacd42869d2f13480edaa419e.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif; }
+        body { background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%); min-height: 100vh; padding-bottom: 80px; }
+        .glass-card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(14px); border-radius: 28px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .btn-gold { background: linear-gradient(95deg, #f59e0b, #f97316); border: none; color: white; font-weight: bold; padding: 10px 20px; border-radius: 60px; cursor: pointer; transition: 0.2s; box-shadow: 0 5px 12px rgba(245,158,11,0.3); }
+        .btn-gold:active { transform: scale(0.96); }
+        .video-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(4px); border-radius: 24px; padding: 14px; transition: 0.2s; border-left: 4px solid #f59e0b; margin-bottom: 16px; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 20px 20px; border-top: 1px solid rgba(255,255,255,0.1); z-index: 100; }
+        .nav-item { text-align: center; color: #94a3b8; font-size: 12px; transition: 0.2s; cursor: pointer; }
+        .nav-item.active { color: #f59e0b; transform: translateY(-3px); }
+        .nav-icon { font-size: 24px; display: block; }
+        .coin-badge { background: #f59e0b; color: #0f172a; border-radius: 40px; padding: 6px 16px; font-weight: bold; }
+        input, select, textarea { background: rgba(255,255,255,0.1); border: 1px solid #475569; padding: 12px; border-radius: 60px; color: white; width: 100%; margin: 6px 0; }
+        .floating-coin { position: fixed; pointer-events: none; font-size: 28px; animation: floatUp 1s ease-out forwards; z-index: 9999; }
+        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) rotate(0deg); } 100% { opacity: 0; transform: translateY(-100px) rotate(20deg); } }
+        .leaderboard-item, .history-item, .redeem-history-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #334155; }
+        .tab-content { display: none; }
+        .tab-content.active-tab { display: block; }
+        .login-container { max-width: 500px; margin: 15vh auto; padding: 28px; width: 90%; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: #1e293b; padding: 24px; border-radius: 32px; width: 90%; max-width: 500px; text-align: center; border: 1px solid #f59e0b; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal-close { position: absolute; top: 12px; right: 16px; font-size: 24px; cursor: pointer; color: #94a3b8; background: none; border: none; }
+        .timer { font-size: 24px; color: #f59e0b; margin: 10px; }
+        .progress-bar { background: #334155; border-radius: 20px; height: 8px; margin: 8px 0; overflow: hidden; }
+        .progress-fill { background: #f59e0b; width: 0%; height: 100%; }
+        .banner-container { width: 100%; overflow: hidden; border-radius: 28px; background: #0f172a; margin-bottom: 24px; height: 180px; position: relative; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+        .banner-slider { display: flex; width: 400%; height: 100%; animation: slide 14s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .banner-slide { width: 25%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #f59e0b, #f97316); color: #0f172a; font-weight: bold; font-size: 1.8rem; text-align: center; padding: 20px; gap: 12px; position: relative; overflow: hidden; }
+        .banner-slide::after { content: ''; position: absolute; top: -50%; left: -60%; width: 200%; height: 200%; background: linear-gradient(115deg, rgba(255,255,255,0) 10%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 90%); transform: rotate(25deg); animation: shine 3s infinite; }
+        @keyframes shine { 0% { transform: translateX(-100%) rotate(25deg); } 20% { transform: translateX(100%) rotate(25deg); } 100% { transform: translateX(100%) rotate(25deg); } }
+        .banner-slide a { color: #0f172a; text-decoration: underline; font-size: 1.2rem; background: rgba(255,255,255,0.3); padding: 6px 16px; border-radius: 40px; font-weight: bold; }
+        @keyframes slide { 0% { transform: translateX(0); } 20% { transform: translateX(0); } 25% { transform: translateX(-25%); } 45% { transform: translateX(-25%); } 50% { transform: translateX(-50%); } 70% { transform: translateX(-50%); } 75% { transform: translateX(-75%); } 95% { transform: translateX(-75%); } 100% { transform: translateX(0); } }
+        @media (max-width: 650px) { .banner-container { height: 150px; } .banner-slide { font-size: 1.2rem; padding: 12px; } .grid-2 { grid-template-columns: 1fr; } }
+        .clickable-balance { cursor: pointer; transition: 0.2s; }
+        .clickable-balance:hover { transform: scale(1.05); }
+        .promo-thumbnail { width: 100%; border-radius: 16px; margin-top: 8px; object-fit: cover; }
+        .copy-code-btn { background: #3b82f6; border: none; padding: 4px 12px; border-radius: 20px; color: white; cursor: pointer; font-size: 12px; margin-left: 8px; }
+        .referral-stats { display: flex; gap: 16px; justify-content: center; margin: 16px 0; }
+        .stat-box { background: #0f172a; border-radius: 28px; padding: 12px 20px; text-align: center; flex: 1; }
+        .daily-timer { font-size: 13px; color: #f59e0b; margin-top: 6px; }
+        .status-pending { color: #f59e0b; }
+        .status-approved { color: #4ade80; }
+        .notification-bell { position: fixed; top: 16px; right: 80px; background: #ef4444; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 150; box-shadow: 0 2px 8px black; }
+        .notification-bell span { background: white; color: black; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; position: absolute; top: -5px; right: -5px; display: flex; align-items: center; justify-content: center; }
+        .wheel-container { position: relative; width: 250px; height: 250px; margin: 20px auto; }
+        canvas#wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 0 0 8px #f59e0b, 0 0 0 12px #0f172a; }
+        .scratch-area { background: repeating-linear-gradient(45deg, #aaa, #aaa 10px, #ccc 10px, #ccc 20px); width: 200px; height: 200px; margin: 20px auto; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 20px; font-size: 24px; color: #0f172a; font-weight: bold; transition: 0.2s; }
+        .scratch-area.scratched { background: #4ade80; }
+        .debug-btn { background: #3b82f6; padding: 4px 8px; border-radius: 12px; font-size: 10px; margin-left: 8px; cursor: pointer; }
+        .selected { border: 2px solid #f59e0b; background: rgba(245,158,11,0.2); }
+    </style>
+</head>
+<body>
+
+<!-- Modals -->
+<div id="adModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeAdModal">✖️</button><h3>Watch Ad</h3><div id="adTimer" class="timer">⏳ 5</div><div id="adMsg">Playing ad... Please wait</div><button id="closeAdBtn" style="margin-top:16px; background:#ef4444;">Cancel</button></div></div>
+<div id="historyModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeHistoryModal">✖️</button><h3>📜 Complete Redeem History</h3><div id="fullHistoryList" style="max-height: 60vh; overflow-y: auto; text-align: left;"></div><button id="closeHistoryFullBtn" style="margin-top:16px; background:#ef4444;">Close</button></div></div>
+<div id="redeemModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeRedeemModalX">✖️</button><h3><i class="fas fa-gift"></i> Redeem Vouchers</h3><div id="voucherCategories"></div><div id="redeemHistoryList" style="margin-top:20px; max-height:200px; overflow-y:auto; border-top:1px solid #334155; padding-top:12px;"></div><button id="closeRedeemModalBtn" style="margin-top:16px; background:#ef4444;">Close</button></div></div>
+<div id="confirmRedeemModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeConfirmRedeemX">✖️</button><h3>Confirm Redeem</h3><p id="confirmRedeemMsg"></p><div style="display:flex; gap:12px; margin-top:16px;"><button id="cancelRedeemBtn" class="btn-gold" style="background:#ef4444;">Cancel</button><button id="confirmRedeemYesBtn" class="btn-gold">Redeem</button></div></div></div>
+<div id="gameCodeModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeGameCodeModal">✖️</button><h3>🎮 Game Zone</h3><p>Enter the secret code below:</p><div class="code-display" id="gameCodeDisplay" style="font-size:28px;letter-spacing:4px;background:#0f172a;padding:16px;border-radius:20px;margin:16px 0;">CODE</div><input type="text" id="gameCodeInput" placeholder="Enter code"><button id="submitGameCodeBtn" class="btn-gold" style="margin-top:12px;">✅ Submit</button><button id="closeGameCodeBtn" style="margin-top:16px;background:#ef4444;">Cancel</button></div></div>
+<div id="articleModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeArticleModal">✖️</button><h3>📖 Read Article</h3><div id="articleLinkContainer"></div><button id="articleReadDoneBtn" class="btn-gold" style="margin-top:12px;">I have read & want coins</button><button id="closeArticleBtn" style="margin-top:12px;background:#ef4444;">Cancel</button></div></div>
+<div id="watchPromoModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeWatchPromoModal">✖️</button><h3>📹 Watch Promoted Video</h3><p>Please watch the video for at least <strong>15 seconds</strong> to earn coins.</p><div id="promoTimer" class="timer">⏳ 15</div><button id="claimPromoBtn" class="btn-gold" style="display:none;">Claim Reward (13 Coins)</button><button id="cancelWatchPromo" style="margin-top:12px;background:#ef4444;">Cancel</button></div></div>
+<div id="notificationModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeNotificationModal">✖️</button><h3><i class="fas fa-bell"></i> Notifications</h3><div id="notificationsList" style="max-height:400px;overflow-y:auto;text-align:left;"></div><button id="closeNotificationBtn" style="margin-top:16px;background:#ef4444;">Close</button></div></div>
+<div id="spinModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeSpinModal">✖️</button><h3>🎡 Spin the Wheel</h3><div class="wheel-container"><canvas id="wheelCanvas" width="500" height="500"></canvas></div><button id="spinNowBtn" class="btn-gold">SPIN</button><p id="spinResult" style="margin-top:12px;"></p><button id="closeSpinModalBtn" style="margin-top:12px;background:#ef4444;">Close</button></div></div>
+<div id="scratchModal" class="modal"><div class="modal-content"><button class="modal-close" id="closeScratchModal">✖️</button><h3>🧹 Scratch Card</h3><div class="scratch-area" id="scratchArea">Scratch Here!</div><p id="scratchResult" style="margin-top:12px;"></p><button id="closeScratchModalBtn" style="margin-top:12px;background:#ef4444;">Close</button></div></div>
+
+<!-- AUTH SECTION -->
+<div id="authSection" class="glass-card login-container">
+    <h2 style="text-align:center;" id="logoClick">💰 SMART EARN <span>🏆</span></h2>
+    <p style="text-align:center; margin-bottom:20px;">Earn coins, redeem vouchers, play games!</p>
+    <input type="text" id="loginUsername" placeholder="Username (any)">
+    <input type="password" id="loginPassword" placeholder="Password (any)">
+    <input type="text" id="referralCodeInput" placeholder="Referral code (optional)">
+    <div id="authError" style="color:#ff8a7a; font-size:13px; margin:8px 0;"></div>
+    <div class="flex-between" style="gap:12px; margin-top:8px;">
+        <button id="loginBtn" class="btn-gold" style="flex:1;">Login</button>
+        <button id="signupBtn" class="btn-gold" style="background:#3b82f6; flex:1;">Sign Up</button>
+    </div>
+    <p style="font-size:12px; text-align:center; margin-top:20px;">⚡ Daily Bonus • Game Zone • Read Article • Offerwall</p>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+    <div class="flex-between" style="padding:16px 20px 8px;">
+        <h2 id="mainLogo" style="color:white;">✨ SMART EARN</h2>
+        <div class="glass-card clickable-balance" id="balanceClicker" style="padding:6px 18px;"><span>🪙 </span><strong id="walletBalance">0</strong> coins</div>
+        <button id="logoutBtn" style="background:#ef4444; border:none; padding:8px 14px; border-radius:40px; color:white;">Exit</button>
+    </div>
+    <div id="notificationBell" class="notification-bell" style="display:none;"><i class="fas fa-bell"></i><span id="notifCount">0</span></div>
+
+    <div class="bottom-nav">
+        <div class="nav-item" data-tab="home"><span class="nav-icon">🏠</span><span>Home</span></div>
+        <div class="nav-item" data-tab="videohub"><span class="nav-icon">📹</span><span>Video Hub</span></div>
+        <div class="nav-item" data-tab="invite"><span class="nav-icon">👥</span><span>Invite</span></div>
+        <div class="nav-item" data-tab="leader"><span class="nav-icon">🏆</span><span>Leader</span></div>
+        <div class="nav-item" data-tab="profile"><span class="nav-icon">👤</span><span>Profile</span></div>
+    </div>
+
+    <div id="homeTab" class="tab-content active-tab" style="padding:16px;">
+        <div class="banner-container" id="bannerContainer"><div class="banner-slider" id="bannerSlider"></div></div>
+        <div class="glass-card" style="padding:20px; margin-bottom:20px; text-align:center;"><h3>👋 Welcome, <span id="userNameDisplay">User</span> ❤️</h3><p>Click coin balance to redeem vouchers</p></div>
+        
+        <div class="grid-2" style="margin-bottom:20px;">
+            <div class="video-card"><div class="flex-between"><span>🎮 Game Zone</span><span class="coin-badge">+8-10 coins</span></div><p>Enter code → ad → earn (10/day)</p><button id="openGameModalBtn" class="btn-gold">🎲 Play Game</button><div id="gameCooldown" class="daily-timer"></div><div>Today: <span id="gameProgress">0</span>/10</div><div class="progress-bar"><div id="gameProgressFill" class="progress-fill"></div></div></div>
+            <div class="video-card"><div class="flex-between"><span>📖 Read Article</span><span class="coin-badge">+10-12 coins</span></div><p>Read 10s → claim → ad (10/day)</p><button id="readArticleBtn" class="btn-gold">📖 Start Reading</button><div>Today: <span id="readArticleCount">0</span>/10</div><div class="progress-bar"><div id="readArticleFill" class="progress-fill"></div></div></div>
+            <div class="video-card"><div class="flex-between"><span>🎫 Scratch Card</span><span class="coin-badge">+9-12 coins</span></div><p>Scratch → claim → ad (10/day)</p><button id="scratchBtn" class="btn-gold">🧹 Scratch Now</button><div id="scratchStatus" class="daily-timer"></div><div>Today: <span id="scratchProgress">0</span>/10</div><div class="progress-bar"><div id="scratchProgressFill" class="progress-fill"></div></div></div>
+            <div class="video-card"><div class="flex-between"><span>🎡 Spin & Win</span><span class="coin-badge">+9-12 coins</span></div><p>Spin wheel → claim → ad (10/day)</p><button id="spinBtn" class="btn-gold">🎲 Spin Now</button><div id="spinStatus" class="daily-timer"></div><div>Today: <span id="spinProgress">0</span>/10</div><div class="progress-bar"><div id="spinProgressFill" class="progress-fill"></div></div></div>
+            <div class="video-card"><div class="flex-between"><span>📺 Offerwall</span><span class="coin-badge">+15 coins</span></div><p>Watch ad → earn (5/day)</p><div class="flex-between"><span>Progress: <span id="videoProgress">0</span>/5</span><button id="watchVideoBtn" class="btn-gold">▶ Watch & Earn</button></div><div class="progress-bar"><div id="videoProgressFill" class="progress-fill"></div></div></div>
+            <div class="video-card"><div class="flex-between"><span>🎁 Daily Bonus</span><span id="dailyBonusStatus" class="coin-badge">Available</span></div><button id="claimDailyBonusBtn" class="btn-gold">🎁 Watch Ad & Get 20 Coins</button><div id="dailyBonusTimer" class="daily-timer"></div></div>
+        </div>
+        <div class="glass-card" style="padding:20px;"><div class="flex-between"><span>🎟️ Promo Code</span><span></span></div><div class="flex-between" style="gap:12px;"><input type="text" id="promoCodeInput" placeholder="Enter code"><button id="redeemPromoBtn" class="btn-gold">Redeem</button></div></div>
+    </div>
+
+    <div id="videohubTab" class="tab-content" style="padding:16px;">
+        <div class="flex-between" style="margin-bottom:16px;"><h2>Video Hub</h2><span class="coin-badge" id="videoHubBalance">0</span></div>
+        <div class="flex-between" style="gap:12px; margin-bottom:20px;">
+            <button class="btn-gold hub-tab-btn active" data-hubtab="promote">Promote</button>
+            <button class="btn-gold hub-tab-btn" data-hubtab="watchpromo">Watch Promo</button>
+            <button class="btn-gold hub-tab-btn" data-hubtab="mystatus">My Status</button>
+        </div>
+        <div id="promoteTab" class="hub-content active"><h3>Promote Your Video</h3><p>Choose package, pay coins, submit YouTube link. Admin approves.</p><div id="packagesList"></div><div id="promoteForm" style="display:none;"><input type="text" id="youtubeLink" placeholder="YouTube link"><p id="selectedPackageInfo"></p><button id="submitPromotionBtn" class="btn-gold">Submit Campaign</button></div></div>
+        <div id="watchpromoTab" class="hub-content" style="display:none;"><h3>👀 Watch Promoted Videos</h3><p>Watch others' videos for 15 seconds → claim → ad → earn 13 coins (each video once, unlimited watches)</p><div id="otherPromotionsList" class="video-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;"></div><div>Today's watches: <span id="watchPromoCount">0</span>/∞</div><div class="progress-bar"><div id="watchPromoFill" class="progress-fill"></div></div></div>
+        <div id="mystatusTab" class="hub-content" style="display:none;">
+            <h3>My Promotions</h3>
+            <button id="refreshMyStatusBtn" class="btn-gold" style="margin-bottom:12px;">🔄 Refresh</button>
+            <div id="userPromotionsList"></div>
+        </div>
+    </div>
+
+    <div id="inviteTab" class="tab-content" style="padding:16px;"><div class="glass-card" style="padding:24px;text-align:center;"><h3>👥 Invite Friends & Earn</h3><div class="referral-stats"><div class="stat-box"><i class="fas fa-users"></i><br><span id="referralCount">0</span><br><small>People Referred</small></div><div class="stat-box"><i class="fas fa-coins"></i><br><span id="referralCoinsEarned">0</span><br><small>Coins Earned</small></div></div><p>📢 <strong>Rules:</strong><br>✅ 25 coins when your friend signs up<br>✅ 50 coins when friend makes first withdrawal</p><div class="referral-code" id="referralCodeDisplay" style="background:#0f172a;padding:12px;border-radius:40px;font-size:20px;margin:16px 0;">CODE</div><div class="flex-between" style="gap:10px;margin-bottom:16px;"><button id="copyRefLinkBtn" class="btn-gold" style="flex:1;"><i class="fas fa-link"></i> Copy Link</button><button id="copyRefCodeBtn" class="btn-gold" style="flex:1;background:#3b82f6;"><i class="fas fa-code"></i> Copy Code</button></div><div class="flex-between" style="gap:10px;"><button id="shareWhatsAppBtn" class="btn-gold" style="background:#25D366;flex:1;"><i class="fab fa-whatsapp"></i> WhatsApp</button><button id="shareTelegramBtn" class="btn-gold" style="background:#0088cc;flex:1;"><i class="fab fa-telegram"></i> Telegram</button><button id="shareInstagramBtn" class="btn-gold" style="background:#E4405F;flex:1;"><i class="fab fa-instagram"></i> Instagram</button></div><p style="margin-top:16px;font-size:12px;">🔗 Your link: <span id="refLinkSpan"></span></p></div></div>
+    <div id="leaderTab" class="tab-content" style="padding:16px;"><div class="glass-card" style="padding:20px;"><h3>🏆 Top Earners</h3><div id="leaderboardList"></div></div></div>
+    <div id="profileTab" class="tab-content" style="padding:16px;"><div class="glass-card" style="padding:20px;"><h3>👤 My Profile</h3><div><strong>Username:</strong> <span id="profileUsername"></span></div><div><strong>Total Coins:</strong> <span id="profileCoins"></span></div><div><strong>Referral Code:</strong> <span id="profileRefCode"></span></div><hr><h4>📜 Coin History</h4><div id="coinHistoryList" style="max-height:200px;overflow-y:auto;"></div><hr><h4>🔄 Redeem History</h4><div id="redeemHistoryProfileList" style="max-height:200px;overflow-y:auto;margin-bottom:12px;"></div><button id="viewFullHistoryBtn" class="btn-gold">View Full History</button><hr><button id="logoutProfileBtn" style="background:#dc2626;width:100%;margin-top:16px;">Logout</button></div></div>
+</div>
+
+<script>
+    (function() {
+        // ========== STORAGE INIT ==========
+        function initStorage() {
+            if(!localStorage.getItem("users")) localStorage.setItem("users", JSON.stringify([]));
+            if(!localStorage.getItem("articleUrl")) localStorage.setItem("articleUrl", "https://example.com/article");
+            if(!localStorage.getItem("promoCodes")) localStorage.setItem("promoCodes", JSON.stringify([]));
+            if(!localStorage.getItem("userVideoPromotions")) localStorage.setItem("userVideoPromotions", JSON.stringify([]));
+            if(!localStorage.getItem("redemptions")) localStorage.setItem("redemptions", JSON.stringify([]));
+            if(!localStorage.getItem("coinHistory")) localStorage.setItem("coinHistory", JSON.stringify({}));
+            if(!localStorage.getItem("referralStats")) localStorage.setItem("referralStats", JSON.stringify({}));
+            if(!localStorage.getItem("bannerSlides")) localStorage.setItem("bannerSlides", JSON.stringify([
+                { type: "text", content: "💰 Welcome to SMART EARN! ⚠️" },
+                { type: "link", text: "📺 Watch our YouTube Channel", url: "https://youtube.com" },
+                { type: "link", text: "✈️ Join Telegram Channel", url: "https://t.me" },
+                { type: "text", content: "🎁 Daily Bonus & More!" }
+            ]));
+            if(!localStorage.getItem("socialLinks")) localStorage.setItem("socialLinks", JSON.stringify({
+                telegram: "https://t.me/smartearn", whatsapp: "https://chat.whatsapp.com/", youtube_sub: "https://youtube.com/@smartearn", instagram: "https://instagram.com/smartearn", rate: "https://play.google.com/store/apps/details?id=com.smartearn"
+            }));
+            if(!localStorage.getItem("notifications")) localStorage.setItem("notifications", JSON.stringify([]));
+            if(!localStorage.getItem("userVideos")) localStorage.setItem("userVideos", JSON.stringify([]));
+            if(!localStorage.getItem("currentUser")) localStorage.setItem("currentUser", "");
+            if(!localStorage.getItem("offerwallCounts")) localStorage.setItem("offerwallCounts", JSON.stringify({}));
+            if(!localStorage.getItem("watchPromoCounts")) localStorage.setItem("watchPromoCounts", JSON.stringify({}));
+            if(!localStorage.getItem("gameLimits")) localStorage.setItem("gameLimits", JSON.stringify({}));
+            if(!localStorage.getItem("articleCounts")) localStorage.setItem("articleCounts", JSON.stringify({}));
+            if(!localStorage.getItem("dailyBonus")) localStorage.setItem("dailyBonus", JSON.stringify({}));
+            if(!localStorage.getItem("watchedVideos")) localStorage.setItem("watchedVideos", JSON.stringify({}));
+            if(!localStorage.getItem("adLimits")) localStorage.setItem("adLimits", JSON.stringify({}));
+            if(!localStorage.getItem("scratchLimits")) localStorage.setItem("scratchLimits", JSON.stringify({}));
+            if(!localStorage.getItem("spinLimits")) localStorage.setItem("spinLimits", JSON.stringify({}));
+            if(!localStorage.getItem("claimedPromoCodes")) localStorage.setItem("claimedPromoCodes", JSON.stringify({}));
+        }
+        initStorage();
+
+        function getUsers() { return JSON.parse(localStorage.getItem("users")); }
+        function saveUsers(u) { localStorage.setItem("users", JSON.stringify(u)); }
+        function getPromoCodes() { return JSON.parse(localStorage.getItem("promoCodes")); }
+        function savePromoCodes(c) { localStorage.setItem("promoCodes", JSON.stringify(c)); }
+        function getRedemptions() { return JSON.parse(localStorage.getItem("redemptions")); }
+        function saveRedemptions(r) { localStorage.setItem("redemptions", JSON.stringify(r)); }
+        function getCoinHistory() { return JSON.parse(localStorage.getItem("coinHistory")); }
+        function saveCoinHistory(h) { localStorage.setItem("coinHistory", JSON.stringify(h)); }
+        function getReferralStats() { return JSON.parse(localStorage.getItem("referralStats")); }
+        function saveReferralStats(s) { localStorage.setItem("referralStats", JSON.stringify(s)); }
+        function getOfferwallCounts() { return JSON.parse(localStorage.getItem("offerwallCounts")); }
+        function saveOfferwallCounts(o) { localStorage.setItem("offerwallCounts", JSON.stringify(o)); }
+        function getWatchPromoCounts() { return JSON.parse(localStorage.getItem("watchPromoCounts")); }
+        function saveWatchPromoCounts(w) { localStorage.setItem("watchPromoCounts", JSON.stringify(w)); }
+        function getGameLimits() { return JSON.parse(localStorage.getItem("gameLimits")); }
+        function saveGameLimits(g) { localStorage.setItem("gameLimits", JSON.stringify(g)); }
+        function getArticleCounts() { return JSON.parse(localStorage.getItem("articleCounts")); }
+        function saveArticleCounts(a) { localStorage.setItem("articleCounts", JSON.stringify(a)); }
+        function getDailyBonus() { return JSON.parse(localStorage.getItem("dailyBonus")); }
+        function saveDailyBonus(d) { localStorage.setItem("dailyBonus", JSON.stringify(d)); }
+        function getWatchedVideos() { return JSON.parse(localStorage.getItem("watchedVideos")); }
+        function saveWatchedVideos(w) { localStorage.setItem("watchedVideos", JSON.stringify(w)); }
+        function getBannerSlides() { return JSON.parse(localStorage.getItem("bannerSlides")); }
+        function saveBannerSlides(s) { localStorage.setItem("bannerSlides", JSON.stringify(s)); }
+        function getSocialLinks() { return JSON.parse(localStorage.getItem("socialLinks")); }
+        function saveSocialLinks(l) { localStorage.setItem("socialLinks", JSON.stringify(l)); }
+        function getNotifications() { return JSON.parse(localStorage.getItem("notifications")); }
+        function saveNotifications(n) { localStorage.setItem("notifications", JSON.stringify(n)); }
+        function getUserVideos() { return JSON.parse(localStorage.getItem("userVideos")); }
+        function saveUserVideos(v) { localStorage.setItem("userVideos", JSON.stringify(v)); }
+        function getArticleUrl() { return localStorage.getItem("articleUrl"); }
+        function getUserVideoPromotions() { return JSON.parse(localStorage.getItem("userVideoPromotions")); }
+        function saveUserVideoPromotions(p) { localStorage.setItem("userVideoPromotions", JSON.stringify(p)); }
+        function getAdLimits() { return JSON.parse(localStorage.getItem("adLimits")); }
+        function saveAdLimits(l) { localStorage.setItem("adLimits", JSON.stringify(l)); }
+        function getScratchLimits() { return JSON.parse(localStorage.getItem("scratchLimits")); }
+        function saveScratchLimits(s) { localStorage.setItem("scratchLimits", JSON.stringify(s)); }
+        function getSpinLimits() { return JSON.parse(localStorage.getItem("spinLimits")); }
+        function saveSpinLimits(s) { localStorage.setItem("spinLimits", JSON.stringify(s)); }
+        function getClaimedPromoCodes() { return JSON.parse(localStorage.getItem("claimedPromoCodes")); }
+        function saveClaimedPromoCodes(c) { localStorage.setItem("claimedPromoCodes", JSON.stringify(c)); }
+
+        let currentUser = null;
+        let gameCanPlay = true;
+        let currentGameCode = null;
+        let dailyTimerInterval = null;
+        let activeWatchPromo = null;
+        let currentSpinAnimation = null;
+        let spinModalActive = false;
+        const REFERRAL_BASE_URL = "https://smatearn.blogspot.com/2026/05/app-download.html";
+
+        function showAd(duration = 5) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById("adModal");
+                const timerDiv = document.getElementById("adTimer");
+                const msgDiv = document.getElementById("adMsg");
+                modal.style.display = "flex";
+                timerDiv.style.display = "block";
+                msgDiv.innerText = "Playing ad... Please wait";
+                let countdown = duration;
+                timerDiv.innerText = `⏳ ${countdown}`;
+                const interval = setInterval(() => {
+                    countdown--;
+                    timerDiv.innerText = `⏳ ${countdown}`;
+                    if(countdown <= 0) {
+                        clearInterval(interval);
+                        timerDiv.style.display = "none";
+                        msgDiv.innerText = "Ad completed! ✅";
+                        setTimeout(() => { modal.style.display = "none"; resolve(true); }, 500);
+                    }
+                }, 1000);
+                const closeHandler = () => { clearInterval(interval); modal.style.display = "none"; resolve(false); };
+                document.getElementById("closeAdModal").onclick = closeHandler;
+                document.getElementById("closeAdBtn").onclick = closeHandler;
+            });
+        }
+
+        function getMidnightResetKey(username, activity) {
+            const today = new Date().toDateString();
+            return `${username}_${activity}_${today}`;
+        }
+        function getCount(username, activity) {
+            const key = getMidnightResetKey(username, activity);
+            const stored = localStorage.getItem(key);
+            return stored ? parseInt(stored) : 0;
+        }
+        function incrementCount(username, activity) {
+            const key = getMidnightResetKey(username, activity);
+            const newCount = getCount(username, activity) + 1;
+            localStorage.setItem(key, newCount);
+            return newCount;
+        }
+        function canDoActivity(username, activity, limit) {
+            return getCount(username, activity) < limit;
+        }
+
+        const gameCodesList = ["5tpA7","JJ4Y4","kK27O","PPP7P","JSTp5","kinGH8","jayOp","KOPhj","kinki4","SMART1"];
+        function startGame() {
+            if(!currentUser) return;
+            if(!canDoActivity(currentUser.username, "game", 10)) { alert("Daily limit of 10 games reached!"); return; }
+            if(!gameCanPlay) { alert("Please wait for cooldown."); return; }
+            currentGameCode = gameCodesList[Math.floor(Math.random() * gameCodesList.length)];
+            document.getElementById("gameCodeDisplay").innerText = currentGameCode;
+            document.getElementById("gameCodeInput").value = "";
+            document.getElementById("gameCodeModal").style.display = "flex";
+        }
+        async function submitGameCode() {
+            const entered = document.getElementById("gameCodeInput").value.trim().toUpperCase();
+            if(entered !== currentGameCode) { alert("Wrong code! Try again."); return; }
+            document.getElementById("gameCodeModal").style.display = "none";
+            const adShown = await showAd(5);
+            if(adShown) {
+                const reward = Math.floor(Math.random() * 3) + 8;
+                addCoins(currentUser.username, reward, "Game Zone");
+                incrementCount(currentUser.username, "game");
+                updateGameProgressUI();
+                alert(`🎉 +${reward} coins!`);
+                gameCanPlay = false;
+                let cooldown = 10;
+                const cooldownDiv = document.getElementById("gameCooldown");
+                cooldownDiv.innerText = `Wait ${cooldown}s`;
+                const interval = setInterval(() => {
+                    cooldown--;
+                    cooldownDiv.innerText = `Wait ${cooldown}s`;
+                    if(cooldown <= 0) {
+                        clearInterval(interval);
+                        cooldownDiv.innerText = "";
+                        gameCanPlay = true;
+                    }
+                }, 1000);
+            }
+        }
+        function updateGameProgressUI() {
+            const count = getCount(currentUser.username, "game");
+            document.getElementById("gameProgress").innerText = count;
+            document.getElementById("gameProgressFill").style.width = (count/10)*100 + "%";
+        }
+
+        let pendingArticle = false;
+        function startReadArticle() {
+            if(!currentUser) return;
+            if(!canDoActivity(currentUser.username, "article", 10)) { alert("Daily limit of 10 articles reached!"); return; }
+            const url = getArticleUrl();
+            window.open(url, "_blank");
+            pendingArticle = true;
+            setTimeout(() => {
+                if(pendingArticle) {
+                    document.getElementById("articleModal").style.display = "flex";
+                    document.getElementById("articleLinkContainer").innerHTML = `<p>You have read the article. Click below to claim coins (ad will play).</p>`;
+                }
+            }, 10000);
+        }
+        async function claimArticleReward() {
+            if(!pendingArticle) return;
+            pendingArticle = false;
+            document.getElementById("articleModal").style.display = "none";
+            const adShown = await showAd(5);
+            if(adShown) {
+                const reward = Math.floor(Math.random() * 3) + 10;
+                addCoins(currentUser.username, reward, "Read Article");
+                incrementCount(currentUser.username, "article");
+                updateReadArticleUI();
+                alert(`🎉 +${reward} coins!`);
+            }
+        }
+        function updateReadArticleUI() {
+            const count = getCount(currentUser.username, "article");
+            document.getElementById("readArticleCount").innerText = count;
+            document.getElementById("readArticleFill").style.width = (count/10)*100 + "%";
+        }
+
+        async function handleScratch() {
+            if(!currentUser) return;
+            if(!canDoActivity(currentUser.username, "scratch", 10)) { alert("Daily limit of 10 scratches reached!"); return; }
+            const modal = document.getElementById("scratchModal");
+            const scratchArea = document.getElementById("scratchArea");
+            const resultDiv = document.getElementById("scratchResult");
+            scratchArea.classList.remove("scratched");
+            scratchArea.innerText = "Scratch Here!";
+            resultDiv.innerText = "";
+            modal.style.display = "flex";
+            const scratchHandler = async () => {
+                if(scratchArea.classList.contains("scratched")) return;
+                scratchArea.classList.add("scratched");
+                scratchArea.innerText = "✨ Scratching... ✨";
+                setTimeout(async () => {
+                    const reward = Math.floor(Math.random() * 4) + 9;
+                    resultDiv.innerText = `You won ${reward} coins! Claim now.`;
+                    const adShown = await showAd(5);
+                    if(adShown) {
+                        addCoins(currentUser.username, reward, "Scratch Card");
+                        incrementCount(currentUser.username, "scratch");
+                        const newCount = getCount(currentUser.username, "scratch");
+                        document.getElementById("scratchProgress").innerText = newCount;
+                        document.getElementById("scratchProgressFill").style.width = (newCount/10)*100 + "%";
+                        alert(`🎉 You scratched and won ${reward} coins!`);
+                        modal.style.display = "none";
+                    } else {
+                        resultDiv.innerText = "Ad cancelled, try again.";
+                    }
+                    scratchArea.removeEventListener("click", scratchHandler);
+                }, 500);
+            };
+            scratchArea.onclick = scratchHandler;
+            document.getElementById("closeScratchModal").onclick = () => modal.style.display = "none";
+            document.getElementById("closeScratchModalBtn").onclick = () => modal.style.display = "none";
+        }
+
+        const rewards = [9, 10, 11, 12];
+        const segments = rewards.length;
+        const segmentAngle = (Math.PI * 2) / segments;
+        let spinAngle = 0;
+        function drawWheel() {
+            const canvas = document.getElementById("wheelCanvas");
+            if(!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const width = canvas.width, height = canvas.height;
+            const centerX = width/2, centerY = height/2;
+            const radius = width/2 - 10;
+            ctx.clearRect(0, 0, width, height);
+            for(let i=0; i<segments; i++) {
+                const startAngle = i * segmentAngle + spinAngle;
+                const endAngle = startAngle + segmentAngle;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.lineTo(centerX, centerY);
+                ctx.fillStyle = i % 2 === 0 ? "#f59e0b" : "#f97316";
+                ctx.fill();
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(startAngle + segmentAngle/2);
+                ctx.fillStyle = "#0f172a";
+                ctx.font = "bold 20px Poppins";
+                ctx.fillText(rewards[i].toString(), radius/1.5, 10);
+                ctx.restore();
+            }
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 15, 0, 2*Math.PI);
+            ctx.fillStyle = "#0f172a";
+            ctx.fill();
+            ctx.fillStyle = "#f59e0b";
+            ctx.font = "bold 20px Poppins";
+            ctx.fillText("🎯", centerX-10, centerY+8);
+        }
+        async function handleSpin() {
+            if(!currentUser) return;
+            if(!canDoActivity(currentUser.username, "spin", 10)) { alert("Daily limit of 10 spins reached!"); return; }
+            const modal = document.getElementById("spinModal");
+            modal.style.display = "flex";
+            spinModalActive = true;
+            const canvas = document.getElementById("wheelCanvas");
+            drawWheel();
+            const spinBtn = document.getElementById("spinNowBtn");
+            const spinResult = document.getElementById("spinResult");
+            spinResult.innerText = "";
+            spinBtn.onclick = () => {
+                if(currentSpinAnimation) return;
+                spinBtn.disabled = true;
+                const duration = 6000;
+                const startTime = Date.now();
+                const startAngle = spinAngle;
+                const targetRotations = 10;
+                const finalAngle = startAngle + targetRotations * 2 * Math.PI;
+                function animateSpin() {
+                    if(!spinModalActive) {
+                        cancelAnimationFrame(currentSpinAnimation);
+                        currentSpinAnimation = null;
+                        spinBtn.disabled = false;
+                        return;
+                    }
+                    const now = Date.now();
+                    const elapsed = now - startTime;
+                    if(elapsed >= duration) {
+                        cancelAnimationFrame(currentSpinAnimation);
+                        currentSpinAnimation = null;
+                        spinAngle = finalAngle % (2*Math.PI);
+                        drawWheel();
+                        const pointerAngle = (Math.PI/2) % (2*Math.PI);
+                        let angleDiff = (spinAngle - pointerAngle + 2*Math.PI) % (2*Math.PI);
+                        let segmentIdx = Math.floor(angleDiff / segmentAngle) % segments;
+                        const reward = rewards[segmentIdx];
+                        spinResult.innerText = `You won ${reward} coins! Claim now.`;
+                        const claim = async () => {
+                            if(!spinModalActive) return;
+                            const adShown = await showAd(5);
+                            if(adShown && spinModalActive) {
+                                addCoins(currentUser.username, reward, "Spin & Win");
+                                incrementCount(currentUser.username, "spin");
+                                const newCount = getCount(currentUser.username, "spin");
+                                document.getElementById("spinProgress").innerText = newCount;
+                                document.getElementById("spinProgressFill").style.width = (newCount/10)*100 + "%";
+                                alert(`🎉 You won ${reward} coins!`);
+                                modal.style.display = "none";
+                                spinModalActive = false;
+                            } else {
+                                spinResult.innerText = "Ad cancelled, try again.";
+                            }
+                            spinBtn.disabled = false;
+                        };
+                        claim();
+                        return;
+                    }
+                    const progress = elapsed / duration;
+                    const easeOut = 1 - Math.pow(1 - progress, 2);
+                    const currentAngle = startAngle + (finalAngle - startAngle) * easeOut;
+                    spinAngle = currentAngle % (2*Math.PI);
+                    drawWheel();
+                    currentSpinAnimation = requestAnimationFrame(animateSpin);
+                }
+                currentSpinAnimation = requestAnimationFrame(animateSpin);
+            };
+            const closeSpin = () => {
+                if(currentSpinAnimation) cancelAnimationFrame(currentSpinAnimation);
+                currentSpinAnimation = null;
+                modal.style.display = "none";
+                spinModalActive = false;
+                spinBtn.disabled = false;
+            };
+            document.getElementById("closeSpinModal").onclick = closeSpin;
+            document.getElementById("closeSpinModalBtn").onclick = closeSpin;
+        }
+
+        async function handleWatchVideo() {
+            if(!currentUser) return;
+            let counts = getOfferwallCounts();
+            const key = `${currentUser.username}_offerwall`;
+            const today = getTodayDate();
+            if(!counts[key]) counts[key] = { date: today, count: 0 };
+            if(counts[key].date !== today) counts[key] = { date: today, count: 0 };
+            if(counts[key].count >= 5) { alert("Daily limit of 5 videos reached!"); return; }
+            const adShown = await showAd(5);
+            if(adShown) {
+                counts[key].count++; saveOfferwallCounts(counts);
+                addCoins(currentUser.username, 15, "Offerwall Video");
+                updateOfferwallUI();
+                alert("🎉 +15 coins!");
+            }
+        }
+        function updateOfferwallUI() {
+            let counts = getOfferwallCounts();
+            const key = `${currentUser.username}_offerwall`;
+            const today = getTodayDate();
+            const count = (counts[key] && counts[key].date === today) ? counts[key].count : 0;
+            document.getElementById("videoProgress").innerText = count;
+            document.getElementById("videoProgressFill").style.width = (count/5)*100 + "%";
+        }
+        function getTodayDate() { return new Date().toDateString(); }
+        function addCoins(username, amount, taskName) {
+            let users = getUsers(); const idx = users.findIndex(u => u.username === username);
+            if(idx !== -1) {
+                users[idx].coins += amount; saveUsers(users);
+                if(currentUser && currentUser.username === username) {
+                    currentUser.coins = users[idx].coins;
+                    ["walletBalance","videoHubBalance","profileCoins"].forEach(id => { let el = document.getElementById(id); if(el) el.innerText = users[idx].coins; });
+                }
+                let history = getCoinHistory(); if(!history[username]) history[username] = [];
+                history[username].unshift({ task: taskName, amount: amount, date: new Date().toLocaleString() });
+                saveCoinHistory(history);
+                showFloatingCoin(amount); showConfetti(); return true;
+            } return false;
+        }
+        function showFloatingCoin(amount) { 
+            const coin = document.createElement('div'); 
+            coin.className = 'floating-coin'; 
+            coin.innerText = `🪙 +${amount}`; 
+            coin.style.left = (window.innerWidth/2)+'px'; 
+            coin.style.top = (window.innerHeight/2)+'px'; 
+            document.body.appendChild(coin); 
+            setTimeout(()=>coin.remove(),1000); 
+        }
+        function showConfetti() { canvasConfetti({particleCount:100, spread:70, origin:{y:0.6}}); }
+
+        function canClaimDailyBonus(username) {
+            const daily = getDailyBonus();
+            const last = daily[username] || 0;
+            const now = Date.now();
+            const oneDay = 24*60*60*1000;
+            return (now - last) >= oneDay;
+        }
+        function updateDailyBonusUI() {
+            if(!currentUser) return;
+            const canClaim = canClaimDailyBonus(currentUser.username);
+            const btn = document.getElementById("claimDailyBonusBtn");
+            const statusSpan = document.getElementById("dailyBonusStatus");
+            const timerDiv = document.getElementById("dailyBonusTimer");
+            if(canClaim) {
+                btn.disabled = false; btn.innerText = "🎁 Watch Ad & Get 20 Coins"; statusSpan.innerText = "Available";
+                timerDiv.innerText = "";
+                if(dailyTimerInterval) clearInterval(dailyTimerInterval);
+            } else {
+                btn.disabled = true; btn.innerText = "⏳ Come back tomorrow"; statusSpan.innerText = "Claimed";
+                const daily = getDailyBonus();
+                const last = daily[currentUser.username] || 0;
+                const next = last + 24*60*60*1000;
+                const updateTimer = () => {
+                    const diff = next - Date.now();
+                    if(diff <= 0) { updateDailyBonusUI(); return; }
+                    const hours = Math.floor(diff / (60*60*1000));
+                    const mins = Math.floor((diff % (60*60*1000)) / (60*1000));
+                    const secs = Math.floor((diff % (60*1000)) / 1000);
+                    timerDiv.innerText = `Next in: ${hours}h ${mins}m ${secs}s`;
+                };
+                updateTimer();
+                if(dailyTimerInterval) clearInterval(dailyTimerInterval);
+                dailyTimerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        async function handleDailyBonus() {
+            if(!currentUser || !canClaimDailyBonus(currentUser.username)) { alert("Already claimed today! Come back tomorrow."); return; }
+            const adShown = await showAd(5);
+            if(adShown) {
+                const daily = getDailyBonus();
+                daily[currentUser.username] = Date.now();
+                saveDailyBonus(daily);
+                addCoins(currentUser.username, 20, "Daily Bonus");
+                updateDailyBonusUI();
+                alert("🎉 +20 coins!");
+            }
+        }
+
+        async function redeemPromoCode() {
+            const code = document.getElementById("promoCodeInput").value.trim().toUpperCase();
+            let codes = getPromoCodes();
+            if(!Array.isArray(codes)) codes = [];
+            const promo = codes.find(c => c.code === code);
+            if(!promo) { alert("Invalid promo code"); return; }
+            let claimed = getClaimedPromoCodes();
+            if(!claimed[currentUser.username]) claimed[currentUser.username] = [];
+            if(claimed[currentUser.username].includes(code)) { alert("You have already used this promo code."); return; }
+            const remaining = (promo.maxUses - (promo.usedCount || 0));
+            if(remaining <= 0) { alert("This promo code has reached its maximum usage limit."); return; }
+            const adShown = await showAd(5);
+            if(adShown) {
+                promo.usedCount = (promo.usedCount || 0) + 1;
+                savePromoCodes(codes);
+                claimed[currentUser.username].push(code);
+                saveClaimedPromoCodes(claimed);
+                addCoins(currentUser.username, promo.reward, "Promo Code");
+                alert(`🎉 +${promo.reward} coins from promo code!`);
+                document.getElementById("promoCodeInput").value = "";
+            }
+        }
+
+        const voucherCategories = [ { name: "Redeem Code", icon: "🎟️", color: "#8b5cf6", options: [{ label: "₹10 Voucher", coins: 1500 }, { label: "₹20 Voucher", coins: 2800 }] }, { name: "Amazon Voucher", icon: "🛒", color: "#ff9900", options: [{ label: "₹10 Amazon", coins: 1500 }, { label: "₹20 Amazon", coins: 2800 }] }, { name: "Flipkart Voucher", icon: "📦", color: "#2874f0", options: [{ label: "₹10 Flipkart", coins: 1500 }, { label: "₹20 Flipkart", coins: 2800 }] } ];
+        let pendingRedeem = null;
+        function renderVoucherCategories() {
+            const container = document.getElementById("voucherCategories");
+            container.innerHTML = voucherCategories.map(cat => `<div class="redeem-option" style="border-top:3px solid ${cat.color};margin:15px 0;padding:15px;border-radius:28px;text-align:center;background:#0f172a;"><div class="redeem-icon" style="font-size:42px;">${cat.icon}</div><h3>${cat.name}</h3><div class="voucher-options">${cat.options.map(opt => `<div class="voucher-item" style="display:flex;justify-content:space-between;align-items:center;background:#0f172a;padding:10px 15px;border-radius:40px;margin:6px 0;"><span>${opt.label}</span><span><strong>${opt.coins}</strong> coins</span><button class="voucher-redeem-btn" data-category="${cat.name}" data-label="${opt.label}" data-cost="${opt.coins}" style="background:${cat.color};padding:6px 12px;border-radius:40px;border:none;">Redeem</button></div>`).join('')}</div></div>`).join('');
+            document.querySelectorAll(".voucher-redeem-btn").forEach(btn => {
+                btn.onclick = () => {
+                    const category = btn.dataset.category, label = btn.dataset.label, cost = parseInt(btn.dataset.cost);
+                    if(currentUser.coins < cost) { alert(`Need ${cost} coins`); return; }
+                    pendingRedeem = { type: category, amount: label, costCoins: cost };
+                    document.getElementById("confirmRedeemMsg").innerHTML = `Redeem <strong>${category} (${label})</strong> for ${cost} coins? Ad will play before submission.`;
+                    document.getElementById("confirmRedeemModal").style.display = "flex";
+                    document.getElementById("redeemModal").style.display = "none";
+                };
+            });
+        }
+        async function confirmRedeem() {
+            document.getElementById("confirmRedeemModal").style.display = "none";
+            if(!pendingRedeem) return;
+            const adShown = await showAd(5);
+            if(adShown) {
+                addCoins(currentUser.username, -pendingRedeem.costCoins, `Redeemed ${pendingRedeem.type} ${pendingRedeem.amount}`);
+                let redemptions = getRedemptions();
+                redemptions.push({ id: Date.now(), username: currentUser.username, type: pendingRedeem.type, amount: pendingRedeem.amount, coins: pendingRedeem.costCoins, status: "pending", date: new Date().toISOString(), code: null });
+                saveRedemptions(redemptions);
+                alert("Redemption request sent! Admin will provide code.");
+                pendingRedeem = null;
+                renderRedeemHistory();
+            }
+        }
+        function renderRedeemHistory() {
+            const redemptions = getRedemptions().filter(r => r.username === currentUser.username);
+            const container = document.getElementById("redeemHistoryList");
+            const profileContainer = document.getElementById("redeemHistoryProfileList");
+            const renderList = (list) => list.map(r => {
+                let statusHtml = `<span class="${r.status === 'pending' ? 'status-pending' : 'status-approved'}">${r.status === 'pending' ? '⏳ Pending' : '✅ Approved'}</span>`;
+                let codeHtml = "";
+                if(r.status === "approved" && r.code) {
+                    codeHtml = `<div style="margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px;"><code style="background:#0f172a; padding:4px 8px; border-radius:12px;">${r.code}</code><button class="copy-code-btn" data-code="${r.code}">Copy</button></div>`;
+                }
+                return `<div class="redeem-history-item"><div><strong>${r.type}</strong><br><small>${r.amount}</small><br><small>${new Date(r.date).toLocaleDateString()}</small></div><div>${r.coins} coins<br>${statusHtml}${codeHtml}</div></div>`;
+            }).join('');
+            const html = renderList(redemptions) || "<p>No redemptions yet.</p>";
+            if(container) container.innerHTML = html;
+            if(profileContainer) profileContainer.innerHTML = html;
+            document.querySelectorAll(".copy-code-btn").forEach(btn => btn.onclick = () => { navigator.clipboard.writeText(btn.dataset.code); alert("Code copied!"); });
+        }
+        function showFullHistory() {
+            const redemptions = getRedemptions().filter(r => r.username === currentUser.username);
+            const modal = document.getElementById("historyModal");
+            const listDiv = document.getElementById("fullHistoryList");
+            if(redemptions.length === 0) { listDiv.innerHTML = "<p>No redemptions yet.</p>"; }
+            else {
+                listDiv.innerHTML = redemptions.map(r => {
+                    let statusHtml = `<span class="${r.status === 'pending' ? 'status-pending' : 'status-approved'}">${r.status === 'pending' ? '⏳ Pending' : '✅ Approved'}</span>`;
+                    let codeHtml = "";
+                    if(r.status === "approved" && r.code) {
+                        codeHtml = `<div style="margin-top:8px; display:flex; align-items:center; justify-content:center; gap:8px;"><code style="background:#0f172a; padding:4px 8px; border-radius:12px;">${r.code}</code><button class="copy-code-btn" data-code="${r.code}">Copy</button></div>`;
+                    }
+                    return `<div class="redeem-history-item"><div><strong>${r.type}</strong><br><small>${r.amount}</small><br><small>${new Date(r.date).toLocaleString()}</small></div><div>${r.coins} coins<br>${statusHtml}${codeHtml}</div></div>`;
+                }).join('');
+                document.querySelectorAll(".copy-code-btn").forEach(btn => btn.onclick = () => { navigator.clipboard.writeText(btn.dataset.code); alert("Code copied!"); });
+            }
+            modal.style.display = "flex";
+        }
+
+        function addReferralCoins(username, amount, reason) { let stats = getReferralStats(); if(!stats[username]) stats[username] = { referredUsers: [], referralCoinsEarned: 0 }; stats[username].referralCoinsEarned += amount; saveReferralStats(stats); addCoins(username, amount, reason); }
+        function addReferredUser(referrer, newUser) { let stats = getReferralStats(); if(!stats[referrer]) stats[referrer] = { referredUsers: [], referralCoinsEarned: 0 }; if(!stats[referrer].referredUsers.includes(newUser)) { stats[referrer].referredUsers.push(newUser); saveReferralStats(stats); addReferralCoins(referrer, 25, `Referral signup: ${newUser}`); } }
+        function markFirstWithdrawal(username) { let users = getUsers(); const userIdx = users.findIndex(u => u.username === username); if(userIdx !== -1 && !users[userIdx].hasWithdrawn) { users[userIdx].hasWithdrawn = true; saveUsers(users); const referrer = users[userIdx].referredBy; if(referrer) addReferralCoins(referrer, 50, `Referral first withdrawal: ${username}`); } }
+        function updateReferralUI() { if(!currentUser) return; const stats = getReferralStats(); const userStats = stats[currentUser.username] || { referredUsers: [], referralCoinsEarned: 0 }; document.getElementById("referralCount").innerText = userStats.referredUsers.length; document.getElementById("referralCoinsEarned").innerText = userStats.referralCoinsEarned; }
+
+        function renderLeaderboard() { const users = getUsers(); const sorted = [...users].sort((a,b) => b.coins - a.coins).slice(0,20); document.getElementById("leaderboardList").innerHTML = sorted.map((u,i) => `<div class="leaderboard-item"><span>${i+1}. ${u.username}</span><span>🪙 ${u.coins}</span></div>`).join('') || "<p>No users yet</p>"; }
+        function renderCoinHistory() { const history = getCoinHistory(); const userHistory = history[currentUser?.username] || []; document.getElementById("coinHistoryList").innerHTML = userHistory.map(h => `<div class="history-item"><span>${h.task}</span><span>+${h.amount} 🪙</span><span style="font-size:11px;">${h.date}</span></div>`).join('') || "<p>No history yet.</p>"; }
+        function showRedeemModal() { renderVoucherCategories(); renderRedeemHistory(); document.getElementById("redeemModal").style.display = "flex"; }
+
+        function updateNotificationBell() {
+            const notifs = getNotifications().filter(n => n.to === currentUser.username && !n.read);
+            const count = notifs.length;
+            const bell = document.getElementById("notificationBell");
+            const countSpan = document.getElementById("notifCount");
+            if(count > 0) { bell.style.display = "flex"; countSpan.innerText = count; } else { bell.style.display = "none"; }
+        }
+        function showNotifications() {
+            const notifs = getNotifications().filter(n => n.to === currentUser.username);
+            const container = document.getElementById("notificationsList");
+            if(notifs.length === 0) { container.innerHTML = "<p>No notifications.</p>"; }
+            else {
+                container.innerHTML = notifs.map(n => `<div class="history-item"><div><strong>${new Date(n.date).toLocaleString()}</strong></div><div>${n.message}</div></div>`).join('');
+            }
+            let allNotifs = getNotifications();
+            allNotifs = allNotifs.map(n => { if(n.to === currentUser.username) n.read = true; return n; });
+            saveNotifications(allNotifs);
+            updateNotificationBell();
+            document.getElementById("notificationModal").style.display = "flex";
+        }
+        function checkAndNotify() {
+            updateNotificationBell();
+            let notifs = getNotifications().filter(n => n.to === currentUser.username && !n.read);
+            if(notifs.length > 0) {
+                const toast = document.createElement('div');
+                toast.style.position = 'fixed';
+                toast.style.bottom = '20px';
+                toast.style.right = '20px';
+                toast.style.background = '#1e293b';
+                toast.style.borderLeft = '4px solid #f59e0b';
+                toast.style.padding = '12px 20px';
+                toast.style.borderRadius = '12px';
+                toast.style.zIndex = '1000';
+                toast.innerHTML = `<i class="fas fa-bell"></i> You have ${notifs.length} new notification(s)`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        function applyUserUI() {
+            if(currentUser) {
+                ["walletBalance","videoHubBalance","profileCoins"].forEach(id => { let el = document.getElementById(id); if(el) el.innerText = currentUser.coins; });
+                const baseLink = `${REFERRAL_BASE_URL}?ref=${currentUser.referralCode}`;
+                document.getElementById("refLinkSpan").innerHTML = baseLink;
+                document.getElementById("userNameDisplay").innerText = currentUser.username;
+                document.getElementById("profileUsername").innerText = currentUser.username;
+                document.getElementById("profileRefCode").innerText = currentUser.referralCode;
+                document.getElementById("referralCodeDisplay").innerText = currentUser.referralCode;
+                renderLeaderboard(); updateOfferwallUI(); updateReadArticleUI(); updateDailyBonusUI(); updateReferralUI(); updateGameProgressUI();
+                const scratchCount = getCount(currentUser.username, "scratch");
+                document.getElementById("scratchProgress").innerText = scratchCount;
+                document.getElementById("scratchProgressFill").style.width = (scratchCount/10)*100 + "%";
+                const spinCount = getCount(currentUser.username, "spin");
+                document.getElementById("spinProgress").innerText = spinCount;
+                document.getElementById("spinProgressFill").style.width = (spinCount/10)*100 + "%";
+                renderMyStatus(); renderWatchPromo(); renderCoinHistory(); renderRedeemHistory();
+                checkAndNotify();
+            }
+        }
+
+        const packages = [ { name: "Starter Boost", views: 250, cost: 2250 }, { name: "Viral Push", views: 500, cost: 4000 }, { name: "Master Campaign", views: 1000, cost: 7000 } ];
+        let selectedPackage = null;
+        function renderPackages() {
+            const container = document.getElementById("packagesList");
+            container.innerHTML = packages.map((pkg, idx) => `<div class="video-package" data-idx="${idx}" style="background:#0f172a;margin:12px 0;padding:12px;border-radius:24px;cursor:pointer;"><div class="flex-between"><strong>${pkg.name}</strong><span>${pkg.views} views</span></div><div>💰 ${pkg.cost} coins</div></div>`).join('');
+            document.querySelectorAll('.video-package').forEach(el => {
+                el.onclick = () => {
+                    document.querySelectorAll('.video-package').forEach(p => p.classList.remove('selected'));
+                    el.classList.add('selected');
+                    selectedPackage = packages[parseInt(el.dataset.idx)];
+                    document.getElementById("promoteForm").style.display = "block";
+                    document.getElementById("selectedPackageInfo").innerHTML = `Package: ${selectedPackage.name} | Views: ${selectedPackage.views} | Cost: ${selectedPackage.cost} coins`;
+                };
+            });
+        }
+        function submitPromotion() {
+            if(!currentUser || !selectedPackage) { 
+                alert("Select a package first"); 
+                return; 
+            }
+            const youtubeLink = document.getElementById("youtubeLink").value.trim();
+            if(!youtubeLink) { 
+                alert("Enter YouTube link"); 
+                return; 
+            }
+            if(currentUser.coins < selectedPackage.cost) { 
+                alert("Insufficient coins"); 
+                return; 
+            }
+            // Deduct coins
+            addCoins(currentUser.username, -selectedPackage.cost, `Promotion: ${selectedPackage.name}`);
+            
+            // Save promotion
+            let promos = getUserVideoPromotions();
+            const newPromo = {
+                id: Date.now(),
+                username: currentUser.username,
+                youtubeLink: youtubeLink,
+                packageName: selectedPackage.name,
+                targetViews: selectedPackage.views,
+                currentViews: 0,
+                status: "pending",
+                cost: selectedPackage.cost,
+                createdAt: new Date().toISOString()
+            };
+            promos.push(newPromo);
+            saveUserVideoPromotions(promos);
+            
+            // VERIFY: immediately read back to ensure save worked
+            let verifyPromos = getUserVideoPromotions();
+            console.log("All promotions after save:", verifyPromos);
+            console.log("Current user promotions:", verifyPromos.filter(p => p.username === currentUser.username));
+            
+            alert("✅ Promotion submitted! Check 'My Status' tab.\n\nIf still not visible, click Refresh button.");
+            
+            // Clear form
+            document.getElementById("youtubeLink").value = "";
+            selectedPackage = null;
+            document.getElementById("promoteForm").style.display = "none";
+            
+            // Force refresh My Status
+            renderMyStatus();
+            
+            // Optional toast
+            const toast = document.createElement('div');
+            toast.innerText = "✅ Promotion added! Go to 'My Status' tab (pending approval)";
+            toast.style.position = "fixed";
+            toast.style.bottom = "80px";
+            toast.style.left = "20px";
+            toast.style.right = "20px";
+            toast.style.background = "#1e293b";
+            toast.style.color = "#f59e0b";
+            toast.style.padding = "12px";
+            toast.style.borderRadius = "20px";
+            toast.style.textAlign = "center";
+            toast.style.zIndex = "999";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+        function renderMyStatus() {
+            if(!currentUser) {
+                console.warn("No current user");
+                return;
+            }
+            const promos = getUserVideoPromotions().filter(p => p.username === currentUser.username);
+            const container = document.getElementById("userPromotionsList");
+            if(!container) {
+                console.error("Container #userPromotionsList not found");
+                return;
+            }
+            console.log("Rendering My Status for", currentUser.username, "promotions:", promos);
+            if(promos.length === 0) {
+                container.innerHTML = "<p>No promotions yet. Click 'Promote' tab to create one.</p>";
+                return;
+            }
+            container.innerHTML = promos.map(p => {
+                const progressPercent = (p.currentViews / p.targetViews) * 100;
+                const statusText = p.status === 'pending' ? '⏳ Pending (Admin approval needed)' : '✅ Active';
+                return `
+                    <div class="video-card" data-promo-id="${p.id}">
+                        <div class="flex-between">
+                            <div><strong>${p.packageName}</strong></div>
+                            <div class="coin-badge">${statusText}</div>
+                        </div>
+                        <div>🔗 ${p.youtubeLink.substring(0,50)}</div>
+                        <div class="detail-row" style="margin-top:8px;">
+                            <strong>Views: ${p.currentViews} / ${p.targetViews}</strong>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width:${progressPercent}%"></div>
+                        </div>
+                        <div class="detail-row" style="font-size:12px; color:#94a3b8;">
+                            Submitted: ${new Date(p.createdAt).toLocaleString()}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        function getYouTubeThumbnail(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            const videoId = (match && match[2].length === 11) ? match[2] : null;
+            return videoId ? `https://img.youtube.com/vi/${videoId}/mqdefault.jpg` : null;
+        }
+        function incrementPromotionViews(promoId) {
+            let promotions = getUserVideoPromotions();
+            const index = promotions.findIndex(p => p.id == promoId);
+            if(index !== -1 && promotions[index].status === "active") {
+                promotions[index].currentViews = (promotions[index].currentViews || 0) + 1;
+                saveUserVideoPromotions(promotions);
+                if(promotions[index].currentViews >= promotions[index].targetViews) {
+                    let notifs = getNotifications();
+                    notifs.push({ to: promotions[index].username, message: `Your video promotion "${promotions[index].packageName}" has reached ${promotions[index].currentViews}/${promotions[index].targetViews} views!`, date: new Date().toISOString(), read: false });
+                    saveNotifications(notifs);
+                }
+                if(currentUser && currentUser.username === promotions[index].username) {
+                    renderMyStatus();
+                }
+            }
+        }
+        function renderWatchPromo() {
+            let userPromos = getUserVideoPromotions().filter(p => p.status === "active" && p.username !== currentUser.username);
+            let adminVideos = getUserVideos().filter(v => v.username === "admin");
+            let allVideos = [
+                ...userPromos.map(p => ({ type: "user", id: p.id, owner: p.username, url: p.youtubeLink, title: p.packageName })),
+                ...adminVideos.map((v, idx) => ({ type: "admin", id: `admin_${idx}`, owner: "Admin", url: v.url, title: "Free Video" }))
+            ];
+            const watched = getWatchedVideos();
+            const userWatched = watched[currentUser.username] || [];
+            allVideos = allVideos.filter(v => !userWatched.includes(String(v.id)));
+            const container = document.getElementById("otherPromotionsList");
+            if(allVideos.length === 0) { container.innerHTML = "<p>No new videos available. Check back later.</p>"; return; }
+            container.innerHTML = allVideos.map(v => {
+                const thumb = getYouTubeThumbnail(v.url);
+                return `<div class="video-card" data-id="${v.id}" data-owner="${v.owner}" data-url="${v.url}">${thumb ? `<img src="${thumb}" class="promo-thumbnail" alt="thumbnail">` : `<div style="background:#0f172a; height:90px; display:flex; align-items:center; justify-content:center;">🎬 Thumbnail</div>`}<div class="flex-between" style="margin-top:8px;"><div><strong>${v.owner}</strong><br><small>${v.title}</small></div><button class="watch-now-btn btn-gold" style="padding:6px 12px;">Watch & Earn 13 Coins</button></div></div>`;
+            }).join('');
+            document.querySelectorAll(".watch-now-btn").forEach(btn => {
+                btn.onclick = () => {
+                    const card = btn.closest('.video-card');
+                    const videoId = card.dataset.id;
+                    const owner = card.dataset.owner;
+                    const url = card.dataset.url;
+                    activeWatchPromo = { id: videoId, owner, url };
+                    window.open(url, "_blank");
+                    const modal = document.getElementById("watchPromoModal");
+                    const timerDiv = document.getElementById("promoTimer");
+                    const claimBtn = document.getElementById("claimPromoBtn");
+                    claimBtn.style.display = "none";
+                    timerDiv.innerText = "⏳ 15";
+                    modal.style.display = "flex";
+                    let seconds = 15;
+                    const interval = setInterval(() => {
+                        seconds--;
+                        timerDiv.innerText = `⏳ ${seconds}`;
+                        if(seconds <= 0) {
+                            clearInterval(interval);
+                            timerDiv.innerText = "✅ Ready!";
+                            claimBtn.style.display = "block";
+                        }
+                    }, 1000);
+                    activeWatchPromo.interval = interval;
+                    activeWatchPromo.modal = modal;
+                    const claimHandler = async () => {
+                        if(seconds > 0) {
+                            alert("Please wait for 15 seconds before claiming.");
+                            return;
+                        }
+                        claimBtn.removeEventListener("click", claimHandler);
+                        modal.style.display = "none";
+                        clearInterval(interval);
+                        let counts = getWatchPromoCounts();
+                        const key = `${currentUser.username}_watchPromo`;
+                        const today = getTodayDate();
+                        if(!counts[key]) counts[key] = { date: today, count: 0 };
+                        let watched = getWatchedVideos();
+                        if(!watched[currentUser.username]) watched[currentUser.username] = [];
+                        if(watched[currentUser.username].includes(activeWatchPromo.id)) { alert("You already earned coins from this video!"); return; }
+                        const adShown = await showAd(5);
+                        if(adShown) {
+                            if(!String(activeWatchPromo.id).startsWith("admin_")) {
+                                incrementPromotionViews(activeWatchPromo.id);
+                            }
+                            watched[currentUser.username].push(activeWatchPromo.id);
+                            saveWatchedVideos(watched);
+                            addCoins(currentUser.username, 13, `Watched ${activeWatchPromo.owner}'s video`);
+                            counts[key].count++; saveWatchPromoCounts(counts);
+                            document.getElementById("watchPromoCount").innerText = counts[key].count;
+                            document.getElementById("watchPromoFill").style.width = (counts[key].count/100)*100 + "%";
+                            alert("🎉 +13 coins!");
+                            renderWatchPromo();
+                        }
+                        activeWatchPromo = null;
+                    };
+                    claimBtn.onclick = claimHandler;
+                    const cancelHandler = () => {
+                        clearInterval(interval);
+                        modal.style.display = "none";
+                        activeWatchPromo = null;
+                    };
+                    document.getElementById("cancelWatchPromo").onclick = cancelHandler;
+                    document.getElementById("closeWatchPromoModal").onclick = cancelHandler;
+                };
+            });
+        }
+
+        function renderBanner() {
+            const slides = getBannerSlides();
+            const container = document.getElementById("bannerSlider");
+            if(container) container.innerHTML = slides.map(slide => slide.type === "link" ? `<div class="banner-slide"><div>${slide.text}</div><a href="${slide.url}" target="_blank">🔗 Visit</a></div>` : `<div class="banner-slide">${slide.content}</div>`).join('');
+        }
+
+        function bindEvents() {
+            document.getElementById("claimDailyBonusBtn").onclick = handleDailyBonus;
+            document.getElementById("watchVideoBtn").onclick = handleWatchVideo;
+            document.getElementById("openGameModalBtn").onclick = startGame;
+            document.getElementById("submitGameCodeBtn").onclick = submitGameCode;
+            document.getElementById("readArticleBtn").onclick = startReadArticle;
+            document.getElementById("articleReadDoneBtn").onclick = claimArticleReward;
+            document.getElementById("redeemPromoBtn").onclick = redeemPromoCode;
+            document.getElementById("balanceClicker").onclick = showRedeemModal;
+            document.getElementById("viewFullHistoryBtn").onclick = showFullHistory;
+            document.getElementById("scratchBtn").onclick = handleScratch;
+            document.getElementById("spinBtn").onclick = handleSpin;
+            document.getElementById("copyRefLinkBtn").onclick = () => {
+                const link = `${REFERRAL_BASE_URL}?ref=${currentUser.referralCode}`;
+                navigator.clipboard.writeText(link);
+                alert("Referral link copied!");
+            };
+            document.getElementById("copyRefCodeBtn").onclick = () => { navigator.clipboard.writeText(currentUser.referralCode); alert("Referral code copied!"); };
+            const shareMessage = () => {
+                const link = `${REFERRAL_BASE_URL}?ref=${currentUser.referralCode}`;
+                return `Namaste 🤑🤑\nSMART EARN application. 🤑\nAPP 📲 LINK 🔗 \n${link}\n\nDownload karo and Apne paison ko redeem karo.\nTrusted application.\nPayment only 30 minutes.\nSign up 50.\nDownload now.`;
+            };
+            document.getElementById("shareWhatsAppBtn").onclick = () => { window.open(`https://wa.me/?text=${encodeURIComponent(shareMessage())}`, '_blank'); };
+            document.getElementById("shareTelegramBtn").onclick = () => { window.open(`https://t.me/share/url?url=${encodeURIComponent(`${REFERRAL_BASE_URL}?ref=${currentUser.referralCode}`)}&text=${encodeURIComponent("Join SMART EARN and earn coins! Use my code to get bonus.")}`, '_blank'); };
+            document.getElementById("shareInstagramBtn").onclick = () => { alert("Copy and share:\n\n" + shareMessage()); };
+            document.getElementById("logoutBtn").onclick = () => { currentUser = null; localStorage.removeItem("currentUser"); location.reload(); };
+            document.getElementById("logoutProfileBtn").onclick = () => { currentUser = null; localStorage.removeItem("currentUser"); location.reload(); };
+            document.getElementById("submitPromotionBtn").onclick = submitPromotion;
+            document.getElementById("cancelRedeemBtn").onclick = () => document.getElementById("confirmRedeemModal").style.display = "none";
+            document.getElementById("confirmRedeemYesBtn").onclick = confirmRedeem;
+            document.getElementById("closeConfirmRedeemX").onclick = () => document.getElementById("confirmRedeemModal").style.display = "none";
+            document.getElementById("closeRedeemModalBtn").onclick = () => document.getElementById("redeemModal").style.display = "none";
+            document.getElementById("closeRedeemModalX").onclick = () => document.getElementById("redeemModal").style.display = "none";
+            document.getElementById("closeHistoryModal").onclick = () => document.getElementById("historyModal").style.display = "none";
+            document.getElementById("closeHistoryFullBtn").onclick = () => document.getElementById("historyModal").style.display = "none";
+            document.getElementById("closeGameCodeModal").onclick = () => document.getElementById("gameCodeModal").style.display = "none";
+            document.getElementById("closeGameCodeBtn").onclick = () => document.getElementById("gameCodeModal").style.display = "none";
+            document.getElementById("closeArticleModal").onclick = () => document.getElementById("articleModal").style.display = "none";
+            document.getElementById("closeArticleBtn").onclick = () => document.getElementById("articleModal").style.display = "none";
+            document.getElementById("notificationBell").onclick = showNotifications;
+            document.getElementById("closeNotificationModal").onclick = () => document.getElementById("notificationModal").style.display = "none";
+            document.getElementById("closeNotificationBtn").onclick = () => document.getElementById("notificationModal").style.display = "none";
+            document.getElementById("refreshMyStatusBtn").onclick = () => { renderMyStatus(); alert("Refreshed! Found " + getUserVideoPromotions().filter(p => p.username === currentUser.username).length + " promotions."); };
+        }
+
+        document.querySelectorAll(".nav-item").forEach(item => {
+            item.onclick = () => {
+                const tab = item.dataset.tab;
+                document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active-tab"));
+                document.getElementById(`${tab}Tab`).classList.add("active-tab");
+                document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+                item.classList.add("active");
+                if(tab === "videohub") { renderPackages(); renderMyStatus(); renderWatchPromo(); }
+                if(tab === "profile") renderCoinHistory();
+            };
+        });
+        document.querySelector(".nav-item").classList.add("active");
+        document.querySelectorAll(".hub-tab-btn").forEach(btn => {
+            btn.onclick = () => {
+                const tab = btn.dataset.hubtab;
+                document.querySelectorAll(".hub-content").forEach(h => h.style.display = "none");
+                document.getElementById(`${tab}Tab`).style.display = "block";
+                document.querySelectorAll(".hub-tab-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                if(tab === "promote") renderPackages();
+                if(tab === "watchpromo") renderWatchPromo();
+                if(tab === "mystatus") renderMyStatus();
+            };
+        });
+
+        function signup(username, password, referralCode) {
+            let users = getUsers();
+            if(users.find(u => u.username === username)) { alert("Username exists"); return false; }
+            let coins = 50; let referredBy = null;
+            if(referralCode) {
+                const referrer = users.find(u => u.referralCode === referralCode);
+                if(referrer) { referredBy = referrer.username; coins = 50; addReferredUser(referrer.username, username); }
+                else alert("Invalid referral code, no bonus");
+            }
+            const newUser = { username, password, coins, referralCode: username.slice(0,6).toUpperCase()+Math.floor(Math.random()*1000), referredBy, hasWithdrawn: false, createdAt: new Date().toISOString() };
+            users.push(newUser); saveUsers(users);
+            if(coins > 0) addCoins(username, coins, "Signup bonus (50 coins)");
+            currentUser = newUser; localStorage.setItem("currentUser", username);
+            return true;
+        }
+        function login(username, password) {
+            const user = getUsers().find(u => u.username === username && u.password === password);
+            if(user) { currentUser = user; localStorage.setItem("currentUser", username); return true; }
+            return false;
+        }
+
+        const savedUser = localStorage.getItem("currentUser");
+        if(savedUser) {
+            const user = getUsers().find(u => u.username === savedUser);
+            if(user) { 
+                currentUser = user; 
+                document.getElementById("authSection").style.display = "none"; 
+                document.getElementById("mainApp").style.display = "block"; 
+                applyUserUI(); 
+                bindEvents(); 
+                renderPackages(); 
+                renderMyStatus(); 
+                renderWatchPromo(); 
+                renderBanner(); 
+            }
+        }
+        document.getElementById("loginBtn").onclick = () => {
+            const uname = document.getElementById("loginUsername").value, pwd = document.getElementById("loginPassword").value;
+            if(login(uname, pwd)) {
+                document.getElementById("authSection").style.display = "none";
+                document.getElementById("mainApp").style.display = "block";
+                applyUserUI(); bindEvents(); renderPackages(); renderMyStatus(); renderWatchPromo(); renderBanner();
+            } else document.getElementById("authError").innerText = "Invalid credentials";
+        };
+        document.getElementById("signupBtn").onclick = () => {
+            const uname = document.getElementById("loginUsername").value, pwd = document.getElementById("loginPassword").value, ref = document.getElementById("referralCodeInput").value.trim();
+            if(!uname || !pwd) { alert("Username & password required"); return; }
+            if(signup(uname, pwd, ref)) {
+                document.getElementById("authSection").style.display = "none";
+                document.getElementById("mainApp").style.display = "block";
+                applyUserUI(); bindEvents(); renderPackages(); renderMyStatus(); renderWatchPromo(); renderBanner();
+            }
+        };
+    })();
+</script>
+</body>
+</html>
